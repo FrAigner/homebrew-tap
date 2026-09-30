@@ -1,0 +1,48 @@
+name: Cask testen
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tap aus diesem Checkout einbinden
+        run: brew tap fraigner/tap "$GITHUB_WORKSPACE"
+
+      - name: Style/Audit (nur Info)
+        continue-on-error: true
+        run: |
+          brew style --cask fraigner/tap/playwright-workbench
+          brew audit --cask --online fraigner/tap/playwright-workbench
+
+      - name: Installieren
+        run: brew install --cask fraigner/tap/playwright-workbench
+
+      - name: App prüfen
+        run: |
+          APP="/Applications/Playwright Workbench.app"
+          test -d "$APP"
+          if xattr -p com.apple.quarantine "$APP" 2>/dev/null; then echo "Quarantäne-Flag noch gesetzt"; exit 1; fi
+          codesign --verify --deep "$APP"
+          file "$APP/Contents/MacOS/Playwright Workbench"
+
+      - name: App starten
+        run: |
+          open -a "Playwright Workbench"
+          sleep 20
+          pgrep -f "Playwright Workbench.app/Contents/MacOS" >/dev/null
+          echo "App läuft"
+          pkill -f "Playwright Workbench.app/Contents/MacOS" || true
+
+      - name: Deinstallieren
+        run: brew uninstall --cask --zap fraigner/tap/playwright-workbench
