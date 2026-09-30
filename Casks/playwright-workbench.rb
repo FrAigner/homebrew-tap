@@ -15,6 +15,8 @@ cask "playwright-workbench" do
     strategy :github_latest
   end
 
+  depends_on :macos
+
   app "Playwright Workbench.app"
 
   # Not notarized by Apple: drop the quarantine flag so Gatekeeper does not block the first launch.
