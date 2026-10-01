@@ -1,9 +1,9 @@
 cask "playwright-workbench" do
   arch arm: "arm64", intel: "x64"
 
-  version "0.1.0"
-  sha256 arm:   "5313f1f910d402b3033f76822044c9497bc2ef50b028be4c98099746ecf63bc9",
-         intel: "af90af42393d6a867b709b824b50f03f1ca19ba3dcdc475efcb857da8bbe59ad"
+  version "0.1.1"
+  sha256 arm:   "9160d0e119f7165abf45efdfe0c1d004e66ffeaf95daeef1c65111b03ca398ca",
+         intel: "7a4952dd7ab731574632862999613ba70c81d3cc5e050becc64ee13fe3a1692d"
 
   url "https://github.com/FrAigner/playwright-workbench/releases/download/v#{version}/playwright-workbench-#{version}-#{arch}.dmg"
   name "Playwright Workbench"
